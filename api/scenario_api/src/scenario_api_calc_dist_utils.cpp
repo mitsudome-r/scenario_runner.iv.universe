@@ -1,11 +1,11 @@
 #include <scenario_api/scenario_calc_dist_utils.h>
 
 double calcDistFromPolygonToPointCloud(
-  const std::shared_ptr<sensor_msgs::PointCloud2> & pointcloud_ptr, const Polygon poly,
+  const std::shared_ptr<sensor_msgs::msg::PointCloud2> & pointcloud_ptr, const Polygon poly,
   const bool consider_height, const double top, const double bottom)
 {
   if (pointcloud_ptr->header.frame_id != "base_link") {
-    ROS_WARN_THROTTLE(5.0, "frame_id of point cloud must be base_link");
+    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), FIXME_S_TO_MS 5.0, "frame_id of point cloud must be base_link");
     return 0.0;  // return short distance
   } else {
     // convert ros msg to pointcloud
@@ -27,8 +27,8 @@ double calcDistFromPolygonToPointCloud(
 }
 
 Polygon makeRelativePolygonFromSelf(
-  const geometry_msgs::Pose self_pose, const geometry_msgs::Pose obj_pose,
-  const geometry_msgs::Vector3 obj_size)
+  const geometry_msgs::msg::Pose self_pose, const geometry_msgs::msg::Pose obj_pose,
+  const geometry_msgs::msg::Vector3 obj_size)
 {
   // get object position
   double obj_x = obj_pose.position.x;

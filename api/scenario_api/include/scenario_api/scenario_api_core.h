@@ -16,15 +16,15 @@
 #ifndef SCENARIO_API_SCENARIO_API_CORE_H_INCLUDED
 #define SCENARIO_API_SCENARIO_API_CORE_H_INCLUDED
 
-#include <autoware_perception_msgs/Semantic.h>
-#include <autoware_perception_msgs/Shape.h>
-#include <autoware_planning_msgs/Route.h>
-#include <autoware_system_msgs/AutowareState.h>
-#include <autoware_vehicle_msgs/TurnSignal.h>
-#include <geometry_msgs/PoseStamped.h>
-#include <geometry_msgs/PoseWithCovarianceStamped.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <geometry_msgs/TwistStamped.h>
+#include <autoware_perception_msgs/msg/semantic.hpp>
+#include <autoware_perception_msgs/msg/shape.hpp>
+#include <autoware_planning_msgs/msg/route.hpp>
+#include <autoware_system_msgs/msg/autoware_state.hpp>
+#include <autoware_vehicle_msgs/msg/turn_signal.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/pose_with_covariance_stamped.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
 #include <lanelet2_extension/utility/message_conversion.h>
 #include <lanelet2_extension/utility/utilities.h>
 #include <lanelet2_routing/RoutingGraph.h>
@@ -32,23 +32,23 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <scenario_api/scenario_api_coordinate_manager.h>
 #include <scenario_api/scenario_calc_dist_utils.h>
 #include <scenario_api_autoware/scenario_api_autoware.h>
 #include <scenario_api_simulator/scenario_api_simulator.h>
 #include <scenario_api_utils/scenario_api_utils.h>
-#include <sensor_msgs/Image.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/Float32.h>
+#include <sensor_msgs/msg/image.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/float32.hpp>
 #include <tf2/convert.h>
 #include <tf2/utils.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 #include <unistd.h>
-#include <uuid_msgs/UniqueID.h>
+#include <uuid_msgs/msg/unique_i_d.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/geometry.hpp>
@@ -112,7 +112,7 @@ public:
     const double x, const double y, const double z, const double yaw, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendStartPoint(
-    const geometry_msgs::Pose pose, const bool wait_ready = true,
+    const geometry_msgs::msg::Pose pose, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendStartPoint(
     const double p_x, const double p_y, const double p_z, const double o_x, const double o_y,
@@ -122,10 +122,10 @@ public:
     const double x, const double y, const double z, const double yaw, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendGoalPoint(
-    const geometry_msgs::Pose pose, const bool wait_ready = true,
+    const geometry_msgs::msg::Pose pose, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendGoalPoint(
-    const std::string & name, const geometry_msgs::Pose pose, const bool wait_ready = true,
+    const std::string & name, const geometry_msgs::msg::Pose pose, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendGoalPoint(
     const double p_x, const double p_y, const double p_z, const double o_x, const double o_y,
@@ -135,10 +135,10 @@ public:
     const double x, const double y, const double z, const double yaw, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendCheckPoint(
-    const geometry_msgs::Pose pose, const bool wait_ready = true,
+    const geometry_msgs::msg::Pose pose, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendCheckPoint(
-    const std::string & name, const geometry_msgs::Pose pose, const bool wait_ready = true,
+    const std::string & name, const geometry_msgs::msg::Pose pose, const bool wait_ready = true,
     const std::string & frame_type = "Center");
   bool sendCheckPoint(
     const double p_x, const double p_y, const double p_z, const double o_x, const double o_y,
@@ -152,20 +152,20 @@ public:
   // coordinate API
   bool setFrameId(
     std::string frame_id, const double x, const double y, const double z, const double yaw);
-  bool setFrameId(std::string frame_id, const geometry_msgs::Pose pose);
+  bool setFrameId(std::string frame_id, const geometry_msgs::msg::Pose pose);
   bool setFrameId(
     std::string frame_id, const double p_x, const double p_y, const double p_z, const double o_x,
     const double o_y, const double o_z, const double o_w);
-  geometry_msgs::Pose getRelativePose(
+  geometry_msgs::msg::Pose getRelativePose(
     std::string frame_id, const double x, const double y, const double z, const double yaw);
-  geometry_msgs::Pose getRelativePose(std::string frame_id, const geometry_msgs::Pose pose);
-  geometry_msgs::Pose getRelativePose(
+  geometry_msgs::msg::Pose getRelativePose(std::string frame_id, const geometry_msgs::msg::Pose pose);
+  geometry_msgs::msg::Pose getRelativePose(
     std::string frame_id, const double p_x, const double p_y, const double p_z, const double o_x,
     const double o_y, const double o_z, const double o_w);
 
   // basic self vehicle API
   Pose2D getCurrentPose();
-  geometry_msgs::PoseStamped getCurrentPoseRos();
+  geometry_msgs::msg::PoseStamped getCurrentPoseRos();
   double getVelocity();
   double getAccel();
   double getJerk();
@@ -175,7 +175,7 @@ public:
     double x, double y, double yaw, double dist_thresh,
     double delta_yaw_thresh);  //!< @brief in designated area or not
   bool isInArea(
-    geometry_msgs::Pose pose, double dist_thresh,
+    geometry_msgs::msg::Pose pose, double dist_thresh,
     double delta_yaw_thresh);  //!< @brief in designated area or not
   bool isInArea(
     double p_x, double p_y, double o_x, double o_y, double o_z, double o_w, double dist_thresh,
@@ -204,7 +204,7 @@ public:
     const double z, const double yaw, const double velocity, const bool stop_by_vehicle = false,
     const std::string & frame_type = "Center");
   bool addNPC(
-    const std::string & npc_type, const std::string & name, geometry_msgs::Pose pose,
+    const std::string & npc_type, const std::string & name, geometry_msgs::msg::Pose pose,
     const double velocity, const bool stop_by_vehicle = false,
     const std::string & frame_type = "Center");
   bool addNPC(
@@ -259,19 +259,19 @@ public:
     const int traffic_id, std::vector<std::string> * const traffic_arrow,
     const bool use_traffic_light);  // future work(simulator) //TODO
 
-  bool getTrafficLineCenterPose(const int traffic_relation_id, geometry_msgs::Pose & line_pose);
+  bool getTrafficLineCenterPose(const int traffic_relation_id, geometry_msgs::msg::Pose & line_pose);
   bool getDistanceToTrafficLight(const int traffic_relation_id, double & distance);
   bool getDistanceToTrafficLine(const int traffic_relation_id, double & distance);
   bool checkOverTrafficLine(const int traffic_relation_id, bool & over_line);
 
   //util API
   bool isObjectInArea(
-    const std::string & name, const geometry_msgs::Pose pose, const double dist_thresh,
+    const std::string & name, const geometry_msgs::msg::Pose pose, const double dist_thresh,
     const double delta_yaw_thresh,
     const std::string & frame_type =
       "Center");  //!< @brief object(ego-car, NPC) is in designated area or not
-  geometry_msgs::Pose genPoseROS(const double x, const double y, const double z, const double yaw);
-  geometry_msgs::Pose genPoseROS(
+  geometry_msgs::msg::Pose genPoseROS(const double x, const double y, const double z, const double yaw);
+  geometry_msgs::msg::Pose genPoseROS(
     const double p_x, const double p_y, const double p_z, const double o_x, const double o_y,
     const double o_z, const double o_w);
 
@@ -283,24 +283,22 @@ public:
   //****************************************************************************************************public API
 
 private:
-  ros::NodeHandle nh_;         //!< @brief ros node handle
-  ros::NodeHandle pnh_;        //!< @brief private ros node handle
-  ros::ServiceClient client_;  //!< @brief private ros service client
-  ros::Subscriber sub_state_;  //!< @brief topic subscriber for autoware state
-  ros::Subscriber sub_pcl_;    //!< @brief topic subscriber for pcl
-  ros::Subscriber sub_map_;    //!< @brief topic subscriber for map
-  ros::Subscriber
+  rclcpp::Client<FIXME>::SharedPtr client_;  //!< @brief private ros service client
+  rclcpp::Subscription<FIXME>::SharedPtr sub_state_;  //!< @brief topic subscriber for autoware state
+  rclcpp::Subscription<FIXME>::SharedPtr sub_pcl_;    //!< @brief topic subscriber for pcl
+  rclcpp::Subscription<FIXME>::SharedPtr sub_map_;    //!< @brief topic subscriber for map
+  rclcpp::Subscriber
     sub_route_;  //!< @brief topic subscriber for current route (for check of autoware ready)
-  ros::Subscriber sub_twist_;          //!< @brief topic subscriber for twist
-  ros::Subscriber sub_turn_signal_;    //!< @brief topic subscriber for turn signal(blinker)
-  ros::Timer timer_control_;           //!< @brief timer for getting self-position
-  ros::Publisher pub_start_point_;     //!< @brief topic pubscriber for start point
-  ros::Publisher pub_goal_point_;      //!< @brief topic pubscriber for goal point
-  ros::Publisher pub_check_point_;     //!< @brief topic pubscriber for check point
-  ros::Publisher pub_start_velocity_;  //!< @brief topic @publisher for initial velocity
-  ros::Publisher pub_max_velocity_;    //!< @brief topic pubscriber for max velocity
-  ros::Publisher pub_engage_;          //!< @brief topic pubscriber for engage
-  ros::Publisher pub_object_info_;     //!<@brief topic pubscriber for npc
+  rclcpp::Subscription<FIXME>::SharedPtr sub_twist_;          //!< @brief topic subscriber for twist
+  rclcpp::Subscription<FIXME>::SharedPtr sub_turn_signal_;    //!< @brief topic subscriber for turn signal(blinker)
+  rclcpp::TimerBase::SharedPtr timer_control_;           //!< @brief timer for getting self-position
+  rclcpp::Publisher<FIXME>::SharedPtr pub_start_point_;     //!< @brief topic pubscriber for start point
+  rclcpp::Publisher<FIXME>::SharedPtr pub_goal_point_;      //!< @brief topic pubscriber for goal point
+  rclcpp::Publisher<FIXME>::SharedPtr pub_check_point_;     //!< @brief topic pubscriber for check point
+  rclcpp::Publisher<FIXME>::SharedPtr pub_start_velocity_;  //!< @brief topic @publisher for initial velocity
+  rclcpp::Publisher<FIXME>::SharedPtr pub_max_velocity_;    //!< @brief topic pubscriber for max velocity
+  rclcpp::Publisher<FIXME>::SharedPtr pub_engage_;          //!< @brief topic pubscriber for engage
+  rclcpp::Publisher<FIXME>::SharedPtr pub_object_info_;     //!<@brief topic pubscriber for npc
 
   std::shared_ptr<ScenarioAPISimulator> simulator_api_;
   std::shared_ptr<ScenarioAPIAutoware> autoware_api_;
@@ -320,42 +318,42 @@ private:
 
   // function for basic self vehicle API
   double getAccel(
-    const std::shared_ptr<geometry_msgs::TwistStamped> current_twist_ptr,
-    const std::shared_ptr<geometry_msgs::TwistStamped> previous_twist_ptr);
+    const std::shared_ptr<geometry_msgs::msg::TwistStamped> current_twist_ptr,
+    const std::shared_ptr<geometry_msgs::msg::TwistStamped> previous_twist_ptr);
 
   double getJerk(
-    const std::shared_ptr<geometry_msgs::TwistStamped> current_twist_ptr,
-    const std::shared_ptr<geometry_msgs::TwistStamped> previous_twist_ptr,
-    const std::shared_ptr<geometry_msgs::TwistStamped> second_previous_twist_ptr);
+    const std::shared_ptr<geometry_msgs::msg::TwistStamped> current_twist_ptr,
+    const std::shared_ptr<geometry_msgs::msg::TwistStamped> previous_twist_ptr,
+    const std::shared_ptr<geometry_msgs::msg::TwistStamped> second_previous_twist_ptr);
 
   // function for additonal self vehicle API
-  bool getLeftBlinker(std::shared_ptr<autoware_vehicle_msgs::TurnSignal> turn_signal_ptr);
-  bool getRightBlinker(std::shared_ptr<autoware_vehicle_msgs::TurnSignal> turn_signal_ptr);
+  bool getLeftBlinker(std::shared_ptr<autoware_vehicle_msgs::msg::TurnSignal> turn_signal_ptr);
+  bool getRightBlinker(std::shared_ptr<autoware_vehicle_msgs::msg::TurnSignal> turn_signal_ptr);
 
   // function for lane API
   bool getCurrentLaneID(
-    int & current_id, const std::shared_ptr<geometry_msgs::PoseStamped> & current_pose,
+    int & current_id, const std::shared_ptr<geometry_msgs::msg::PoseStamped> & current_pose,
     const lanelet::LaneletMapPtr & lanelet_map_ptr, double max_dist, double max_deleta_yaw);
   bool getDistancefromCenterLine(
-    double & dist_from_center, const std::shared_ptr<geometry_msgs::PoseStamped> & current_pose,
+    double & dist_from_center, const std::shared_ptr<geometry_msgs::msg::PoseStamped> & current_pose,
     std::shared_ptr<lanelet::Lanelet> current_lanelet);
   bool getDistancefromCenterLine(
-    double & dist_from_center, const std::shared_ptr<geometry_msgs::PoseStamped> & current_pose,
+    double & dist_from_center, const std::shared_ptr<geometry_msgs::msg::PoseStamped> & current_pose,
     const std::shared_ptr<lanelet::LaneletMap> & lanelet_map_ptr, lanelet::Id lane_id);
 
   bool isInLane(
-    const std::shared_ptr<geometry_msgs::PoseStamped> & current_pose,
+    const std::shared_ptr<geometry_msgs::msg::PoseStamped> & current_pose,
     std::shared_ptr<lanelet::Lanelet> current_lanelet);
   double getRateInLane();  // TODO get percentage of body in lanelet polygon
 
   // function for obstacle API
   double calcMinimumDistanceToObstacle(
-    const std::shared_ptr<sensor_msgs::PointCloud2> & pointcloud, const bool consider_height);
+    const std::shared_ptr<sensor_msgs::msg::PointCloud2> & pointcloud, const bool consider_height);
 
   // NPC API
   bool getNPC(
-    const std::string & name, geometry_msgs::Pose & object_pose,
-    geometry_msgs::Twist & object_twist, geometry_msgs::Vector3 & object_size,
+    const std::string & name, geometry_msgs::msg::Pose & object_pose,
+    geometry_msgs::msg::Twist & object_twist, geometry_msgs::msg::Vector3 & object_size,
     std::string & object_name);
 };
 
