@@ -21,16 +21,16 @@
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <scenario_api_utils/scenario_api_utils.h>
-#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 #include <tf2/utils.h>
 
 double calcDistFromPolygonToPointCloud(
-  const std::shared_ptr<sensor_msgs::PointCloud2> & pointcloud_ptr, const Polygon poly,
+  const std::shared_ptr<sensor_msgs::msg::PointCloud2> & pointcloud_ptr, const Polygon poly,
   const bool consider_height, const double top, const double bottom);
 
 Polygon makeRelativePolygonFromSelf(
-  const geometry_msgs::Pose self_pose, const geometry_msgs::Pose obj_pose,
-  const geometry_msgs::Vector3 obj_size);
+  const geometry_msgs::msg::Pose self_pose, const geometry_msgs::msg::Pose obj_pose,
+  const geometry_msgs::msg::Vector3 obj_size);
 
 double calcDistOfPolygon(const Polygon poly, const Polygon poly2);
 
