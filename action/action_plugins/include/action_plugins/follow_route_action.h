@@ -10,7 +10,7 @@ namespace action_plugins
 class FollowRouteAction
   : public scenario_actions::EntityActionBase
 {
-  geometry_msgs::Pose goal_;
+  geometry_msgs::msg::Pose goal_;
 
   std::string shift_;
 
