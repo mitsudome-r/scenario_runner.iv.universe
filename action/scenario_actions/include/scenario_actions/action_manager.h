@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 
 #include <yaml-cpp/yaml.h>
 
