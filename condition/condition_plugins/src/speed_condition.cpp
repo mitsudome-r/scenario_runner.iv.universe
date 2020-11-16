@@ -55,7 +55,7 @@ bool SpeedCondition::update(
 
       if (not (*api_ptr_).getNPCVelocity(trigger_, &npc_velocity))
       {
-        ROS_ERROR_STREAM("Invalid trigger name specified for " << getType() << " condition named " << getName());
+        RCLCPP_ERROR_STREAM(rclcpp::get_logger("SpeedCondition"), "Invalid trigger name specified for " << getType() << " condition named " << getName());
         return result_ = false;
       }
       else
@@ -68,6 +68,6 @@ bool SpeedCondition::update(
 
 }  // namespace condition_plugins
 
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(condition_plugins::SpeedCondition, scenario_conditions::ConditionBase)
 

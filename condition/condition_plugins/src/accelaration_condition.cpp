@@ -56,7 +56,7 @@ bool AccelerationCondition::update(
 
       if (not (*api_ptr_).getNPCAccel(trigger_, &npc_acceleration))
       {
-        ROS_ERROR_STREAM("Invalid trigger name specified for " << getType() << " condition named " << getName());
+        RCLCPP_ERROR_STREAM(rclcpp::get_logger("AccelerationCondition"), "Invalid trigger name specified for " << getType() << " condition named " << getName());
         return result_ = false;
       }
       else
