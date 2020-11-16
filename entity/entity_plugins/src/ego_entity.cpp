@@ -23,12 +23,15 @@ try
   if (not (*api_).setEgoCarName(name_))
   {
     SCENARIO_ERROR_THROW(CATEGORY(), "Failed to set ego-car-name.");
+    return false;
   }
+  return true;
 }
 catch (...)
 {
   SCENARIO_ERROR_RETHROW(CATEGORY(),
     "Failed to configure entity named '" << name_ << "' of type " << type_ << ".");
+  return false;
 }
 
 bool EgoEntity::init()
@@ -60,7 +63,7 @@ try
 
   call_with_essential(init_entity_, "InitialStates", [&](const auto& node) mutable
   {
-    const auto pose { read_essential<geometry_msgs::Pose>(node, "Pose") };
+    const auto pose { read_essential<geometry_msgs::msg::Pose>(node, "Pose") };
 
     if (not api_->sendStartPoint(pose, true, read_optional<std::string>(node, "Shift", "Center")))
     {
@@ -92,5 +95,5 @@ catch (...)
 
 } // namespace entity_plugins
 
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 PLUGINLIB_EXPORT_CLASS(entity_plugins::EgoEntity, scenario_entities::EntityBase)
