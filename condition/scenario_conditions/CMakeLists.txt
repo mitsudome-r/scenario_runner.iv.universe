@@ -25,4 +25,3 @@ ament_auto_add_library(scenario_conditions SHARED
 )
 
 ament_auto_package()
-
