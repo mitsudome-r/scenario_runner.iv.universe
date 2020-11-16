@@ -3,8 +3,6 @@
 
 #include <queue>
 
-#include <ros/ros.h>
-
 #include <yaml-cpp/yaml.h>
 
 #include <scenario_entities/entity_manager.h>

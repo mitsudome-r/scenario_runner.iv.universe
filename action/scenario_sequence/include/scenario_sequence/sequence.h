@@ -1,8 +1,6 @@
 #ifndef SCENARIO_SEQUENCE_SEQUENCE_H_INCLUDED
 #define SCENARIO_SEQUENCE_SEQUENCE_H_INCLUDED
 
-#include <ros/ros.h>
-
 #include <yaml-cpp/yaml.h>
 
 #include <scenario_entities/entity_manager.h>
