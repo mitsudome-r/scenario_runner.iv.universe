@@ -3,13 +3,13 @@
 
 namespace scenario_runner
 {
-ScenarioRunner::ScenarioRunner(ros::NodeHandle nh, ros::NodeHandle pnh)
-: currently{simulation_is::ongoing},
-  nh_{nh},
-  pnh_{pnh},
+ScenarioRunner::ScenarioRunner()
+: Node("scenario_runner_node"),
+  currently{simulation_is::ongoing},
   simulator_{std::make_shared<ScenarioAPI>()}
 {
-  pnh_.getParam("scenario_path", scenario_path_);
+
+  scenario_path_ = this->declare_parameter("scenario_path").get<std::string>();
 
   if (not (*simulator_).waitAutowareInitialize())
   {
@@ -39,12 +39,12 @@ try
           node, simulator_));
   });
 
-  call_with_optional(scenario_, "Intersection", [&](const auto& node) mutable
+  call_with_optional(scenario_, "Intersection", [&](auto& node) mutable
   {
     context.define(
       intersection_manager_ =
         std::make_shared<scenario_intersection::IntersectionManager>(
-          node, simulator_));
+          node, simulator_, this->get_logger()));
   });
 
   call_with_essential(scenario_, "Story", [&](const auto& node) mutable
@@ -91,7 +91,14 @@ try
   simulator_->waitAPIReady();
   SCENARIO_INFO_STREAM(CATEGORY(), "Simulator API is ready.");
 
-  timer_ = nh_.createTimer(ros::Duration(0.01), &ScenarioRunner::update, this);
+  auto timer_callback = std::bind(&ScenarioRunner::update, this);
+  const double period_s = 0.01;
+  const auto period_ns =
+    std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(period_s));
+  timer_ = std::make_shared<rclcpp::GenericTimer<decltype(timer_callback)>>(
+    this->get_clock(), period_ns, std::move(timer_callback),
+    this->get_node_base_interface()->get_context());
+  this->get_node_timers_interface()->add_timer(timer_, nullptr);
 
   if (not simulator_->sendEngage(true))
   {
@@ -99,7 +106,7 @@ try
   }
   SCENARIO_INFO_STREAM(CATEGORY("simulation", "progress"), "ScenarioRunner engaged Autoware.");
 
-  scenario_logger::log.initialize(ros::Time::now()); // NOTE: initialize logger's clock here.
+  scenario_logger::log.initialize(this->now()); // NOTE: initialize logger's clock here.
   SCENARIO_INFO_STREAM(CATEGORY("simulation", "progress"), "Simulation started.");
 }
 catch (...)
@@ -107,7 +114,7 @@ catch (...)
   SCENARIO_ERROR_RETHROW(CATEGORY(), "Failed to initialize ScenarioRunner.");
 }
 
-void ScenarioRunner::update(const ros::TimerEvent & event) try
+void ScenarioRunner::update() try
 {
   scenario_logger::log.updateMoveDistance(simulator_->getMoveDistance());
   (*sequence_manager_).update(intersection_manager_);

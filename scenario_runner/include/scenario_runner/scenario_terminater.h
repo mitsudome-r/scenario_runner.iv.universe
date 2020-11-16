@@ -1,7 +1,6 @@
 #ifndef SCENARIO_RUNNER_SCENARIO_TERMINATOR_H_INCLUDEED
 #define SCENARIO_RUNNER_SCENARIO_TERMINATOR_H_INCLUDEED
 
-#include <ros/ros.h>
 #include <xmlrpcpp/XmlRpcClient.h>
 #include <xmlrpcpp/XmlRpcValue.h>
 

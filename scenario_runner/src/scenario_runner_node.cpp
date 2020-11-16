@@ -2,7 +2,7 @@
 #include <boost/cstdlib.hpp>
 #include <exception>
 #include <glog/logging.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <scenario_logger/logger.h>
 #include <scenario_runner/scenario_runner.h>
 #include <scenario_runner/scenario_terminater.h>
@@ -21,41 +21,38 @@ int main(int argc, char * argv[]) try
   google::InitGoogleLogging(argv[0]);
   google::InstallFailureFunction(&failureCallback);
 
-  ros::init(argc, argv, "scenario_runner_node");
-  ros::NodeHandle nh;
-  ros::NodeHandle pnh("~");
+  rclcpp::init(argc, argv);
 
-  scenario_logger::log.setStartDatetime(ros::Time::now());
+  /*
+   * setup scenario runner
+   */
+  auto runner = std::make_shared<scenario_runner::ScenarioRunner>();
+  SCENARIO_INFO_STREAM(CATEGORY("simulation", "progress"), "ScenarioRunner instantiated.");
+
+  scenario_logger::log.setStartDatetime(runner->now());
   SCENARIO_LOG_STREAM(CATEGORY("simulation", "progress"), "Logging started.");
 
-  std::string scenario_id;
-  pnh.getParam("scenario_id", scenario_id);
+  std::string scenario_id = runner->declare_parameter("scenario_id").get<std::string>();
   scenario_logger::log.setScenarioID(scenario_id);
 
-  std::string log_output_path;
-  pnh.getParam("log_output_path", log_output_path);
+  std::string log_output_path = runner->declare_parameter("log_output_path").get<std::string>();
   scenario_logger::log.setLogOutputPath(log_output_path);
 
   SCENARIO_INFO_STREAM(CATEGORY(), "Sleep for 10 seconds.");
   std::this_thread::sleep_for(std::chrono::seconds { 10 });
   SCENARIO_INFO_STREAM(CATEGORY(), "Wake-up.");
 
-  /*
-   * setup scenario runner
-   */
-  scenario_runner::ScenarioRunner runner(nh, pnh);
-  SCENARIO_INFO_STREAM(CATEGORY("simulation", "progress"), "ScenarioRunner instantiated.");
 
   /*
    * start simulation
    */
-  for (runner.run(); ros::ok(); ros::spinOnce())
+  for (runner->run(); rclcpp::ok(); rclcpp::spin_some(runner))
   {
-    static auto previously{runner.currently};
+    static auto previously{runner->currently};
 
-    if (previously != runner.currently)
+    if (previously != runner->currently)
     {
-      switch (previously = runner.currently)
+      switch (previously = runner->currently)
       {
       case simulation_is::succeeded:
         SCENARIO_INFO_STREAM(CATEGORY("simulator", "endcondition"), "simulation succeeded");
@@ -74,13 +71,13 @@ int main(int argc, char * argv[]) try
       }
     }
 
-    terminator.update_mileage(runner.current_mileage());
+    terminator.update_mileage(runner->current_mileage());
 
     terminator.update_duration(
-      (ros::Time::now() - scenario_logger::log.begin()).toSec());
+      (runner->now() - scenario_logger::log.begin()).seconds());
   }
 
-  if (runner.currently == simulation_is::ongoing)
+  if (runner->currently == simulation_is::ongoing)
   {
     SCENARIO_INFO_STREAM(CATEGORY(), "Simulation aborted.");
     scenario_logger::log.write();
@@ -100,6 +97,8 @@ catch (const std::exception& e)
   SCENARIO_ERROR_STREAM(CATEGORY("simulator", "endcondition"), "Unexpected standard exception thrown: " << e.what());
   scenario_logger::log.write();
   terminator.sendTerminateRequest(boost::exit_exception_failure);
+  return boost::exit_exception_failure;
+
 }
 
 catch (...)
@@ -107,4 +106,5 @@ catch (...)
   SCENARIO_ERROR_STREAM(CATEGORY("simulator", "endcondition"), "Unexpected non-standard exception thrown.");
   scenario_logger::log.write();
   terminator.sendTerminateRequest(boost::exit_exception_failure);
+  return boost::exit_exception_failure;
 }
