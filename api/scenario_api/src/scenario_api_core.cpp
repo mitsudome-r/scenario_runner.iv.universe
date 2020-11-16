@@ -16,11 +16,11 @@
 
 #include <scenario_api/scenario_api_core.h>
 
-ScenarioAPI::ScenarioAPI()
+ScenarioAPI::ScenarioAPI() : Node("scenario_api")
 {
   /* construct API class*/
-  autoware_api_ = std::make_shared<ScenarioAPIAutoware>();
-  simulator_api_ = std::make_shared<ScenarioAPISimulator>();
+  autoware_api_ = std::make_shared<ScenarioAPIAutoware>(this);
+  simulator_api_ = std::make_shared<ScenarioAPISimulator>(this);
   coordinate_api_ = std::make_shared<ScenarioAPICoordinateManager>();
 }
 
@@ -85,17 +85,19 @@ bool ScenarioAPI::sendCheckPoint(
 
 bool ScenarioAPI::sendStartVelocity(const double velocity)
 {
-  autoware_api_->sendStartVelocity(velocity);
+  const auto sent_start_velocity = autoware_api_->sendStartVelocity(velocity);
   //sleep for autoware path plan
   //*if you engage autoware soon after using this API,
   //*egp-vehicle decelerates after engage.
   rclcpp::Rate(1.0).sleep();
+  return sent_start_velocity;
 }
 
 bool ScenarioAPI::sendEngage(const bool engage)
 {
-  autoware_api_->sendEngage(engage);
-  simulator_api_->sendEngage(engage);
+  const auto sent_engage_autoware = autoware_api_->sendEngage(engage);
+  const auto sent_engage_simulator = simulator_api_->sendEngage(engage);
+  return sent_engage_autoware && sent_engage_simulator;
 }
 
 bool ScenarioAPI::waitAutowareInitialize() { return autoware_api_->waitAutowareInitialize(); }
@@ -456,7 +458,7 @@ bool ScenarioAPI::isObjectInArea(
     }
   } else {
     //npc-object
-    npc_simulator::Object obj;
+    npc_simulator::msg::Object obj;
     if (!simulator_api_->getNPC(name, obj)) {
       return false;
     }

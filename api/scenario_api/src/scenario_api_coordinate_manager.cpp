@@ -25,7 +25,7 @@ bool ScenarioAPICoordinateManager::setFrameId(
 {
   // TODO: now, source frame is only map
   if (coordinate_map_.find(frame_id) != coordinate_map_.end()) {
-    RCLCPP_WARN(get_logger(), "Frame:(id:%s) already exsists", frame_id.c_str());
+    RCLCPP_WARN(rclcpp::get_logger("ScenarioAPICoordinateManager"), "Frame:(id:%s) already exsists", frame_id.c_str());
     return false;
   }
 
@@ -49,7 +49,7 @@ geometry_msgs::msg::Pose ScenarioAPICoordinateManager::getRelativePose(
   geometry_msgs::msg::Pose relative_pose;
 
   if (coordinate_map_.find(frame_id) == coordinate_map_.end()) {
-    RCLCPP_WARN(get_logger(), "Frame(id:%s) does not exsist", frame_id.c_str());
+    RCLCPP_WARN(rclcpp::get_logger("ScenarioAPICoordinateManager"), "Frame(id:%s) does not exsist", frame_id.c_str());
     return relative_pose;  // TODO return nullptr (change function type)
   }
 

@@ -48,7 +48,6 @@
 #include <tf2_ros/static_transform_broadcaster.h>
 #include <tf2_ros/transform_listener.h>
 #include <unistd.h>
-#include <uuid_msgs/msg/unique_i_d.hpp>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/geometry.hpp>
@@ -80,7 +79,7 @@ class TrafficRules;
 }
 }  // namespace lanelet
 
-class ScenarioAPI
+class ScenarioAPI : public rclcpp::Node
 {
 public:
   /**
@@ -283,22 +282,22 @@ public:
   //****************************************************************************************************public API
 
 private:
-  rclcpp::Client<FIXME>::SharedPtr client_;  //!< @brief private ros service client
-  rclcpp::Subscription<FIXME>::SharedPtr sub_state_;  //!< @brief topic subscriber for autoware state
-  rclcpp::Subscription<FIXME>::SharedPtr sub_pcl_;    //!< @brief topic subscriber for pcl
-  rclcpp::Subscription<FIXME>::SharedPtr sub_map_;    //!< @brief topic subscriber for map
-  rclcpp::Subscriber
-    sub_route_;  //!< @brief topic subscriber for current route (for check of autoware ready)
-  rclcpp::Subscription<FIXME>::SharedPtr sub_twist_;          //!< @brief topic subscriber for twist
-  rclcpp::Subscription<FIXME>::SharedPtr sub_turn_signal_;    //!< @brief topic subscriber for turn signal(blinker)
-  rclcpp::TimerBase::SharedPtr timer_control_;           //!< @brief timer for getting self-position
-  rclcpp::Publisher<FIXME>::SharedPtr pub_start_point_;     //!< @brief topic pubscriber for start point
-  rclcpp::Publisher<FIXME>::SharedPtr pub_goal_point_;      //!< @brief topic pubscriber for goal point
-  rclcpp::Publisher<FIXME>::SharedPtr pub_check_point_;     //!< @brief topic pubscriber for check point
-  rclcpp::Publisher<FIXME>::SharedPtr pub_start_velocity_;  //!< @brief topic @publisher for initial velocity
-  rclcpp::Publisher<FIXME>::SharedPtr pub_max_velocity_;    //!< @brief topic pubscriber for max velocity
-  rclcpp::Publisher<FIXME>::SharedPtr pub_engage_;          //!< @brief topic pubscriber for engage
-  rclcpp::Publisher<FIXME>::SharedPtr pub_object_info_;     //!<@brief topic pubscriber for npc
+  // rclcpp::Client<FIXME>::SharedPtr client_;  //!< @brief private ros service client
+  // rclcpp::Subscription<FIXME>::SharedPtr sub_state_;  //!< @brief topic subscriber for autoware state
+  // rclcpp::Subscription<FIXME>::SharedPtr sub_pcl_;    //!< @brief topic subscriber for pcl
+  // rclcpp::Subscription<FIXME>::SharedPtr sub_map_;    //!< @brief topic subscriber for map
+  // rclcpp::Subscriber
+  //   sub_route_;  //!< @brief topic subscriber for current route (for check of autoware ready)
+  // rclcpp::Subscription<FIXME>::SharedPtr sub_twist_;          //!< @brief topic subscriber for twist
+  // rclcpp::Subscription<FIXME>::SharedPtr sub_turn_signal_;    //!< @brief topic subscriber for turn signal(blinker)
+  // rclcpp::TimerBase::SharedPtr timer_control_;           //!< @brief timer for getting self-position
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_start_point_;     //!< @brief topic pubscriber for start point
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_goal_point_;      //!< @brief topic pubscriber for goal point
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_check_point_;     //!< @brief topic pubscriber for check point
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_start_velocity_;  //!< @brief topic @publisher for initial velocity
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_max_velocity_;    //!< @brief topic pubscriber for max velocity
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_engage_;          //!< @brief topic pubscriber for engage
+  // rclcpp::Publisher<FIXME>::SharedPtr pub_object_info_;     //!<@brief topic pubscriber for npc
 
   std::shared_ptr<ScenarioAPISimulator> simulator_api_;
   std::shared_ptr<ScenarioAPIAutoware> autoware_api_;
@@ -310,8 +309,8 @@ private:
   std::string autoware_state_;
 
   // TF
-  tf2_ros::Buffer tf_buffer_;
-  tf2_ros::TransformListener tf_listener_{tf_buffer_};
+  // tf2_ros::Buffer tf_buffer_;
+  // tf2_ros::TransformListener tf_listener_{tf_buffer_};
 
   // function for start API
   bool waitState(const std::string state);

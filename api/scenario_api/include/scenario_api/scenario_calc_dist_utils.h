@@ -24,6 +24,15 @@
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <tf2/utils.h>
 
+#include <boost/geometry.hpp>
+
+namespace bg = boost::geometry;
+namespace bt = bg::strategy::transform;
+typedef bg::model::d2::point_xy<double> Point;
+typedef bg::model::linestring<Point> Line;
+typedef bg::model::polygon<Point> Polygon;
+
+
 double calcDistFromPolygonToPointCloud(
   const std::shared_ptr<sensor_msgs::msg::PointCloud2> & pointcloud_ptr, const Polygon poly,
   const bool consider_height, const double top, const double bottom);

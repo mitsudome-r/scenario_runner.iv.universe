@@ -1,11 +1,13 @@
 #include <scenario_api/scenario_calc_dist_utils.h>
+#include <boost/assign/list_of.hpp>
 
 double calcDistFromPolygonToPointCloud(
   const std::shared_ptr<sensor_msgs::msg::PointCloud2> & pointcloud_ptr, const Polygon poly,
   const bool consider_height, const double top, const double bottom)
 {
+  static auto clock = rclcpp::Clock(RCL_ROS_TIME);
   if (pointcloud_ptr->header.frame_id != "base_link") {
-    RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), FIXME_S_TO_MS 5.0, "frame_id of point cloud must be base_link");
+    RCLCPP_WARN_THROTTLE(rclcpp::get_logger("calcDistFromPolygonToPointCloud"), clock, std::chrono::milliseconds(5000).count(), "frame_id of point cloud must be base_link");
     return 0.0;  // return short distance
   } else {
     // convert ros msg to pointcloud
