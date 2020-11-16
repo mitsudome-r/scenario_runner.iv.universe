@@ -33,7 +33,7 @@ private:
 
   const std::shared_ptr<ScenarioAPI> api_ptr_;
 
-  std::vector<boost::shared_ptr<EntityActionBase>> actions_;
+  std::vector<std::shared_ptr<EntityActionBase>> actions_;
 
   bool loadPlugin(const YAML::Node& node);
 };

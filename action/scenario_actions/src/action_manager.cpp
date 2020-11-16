@@ -44,14 +44,16 @@ try
   }
   else
   {
-    auto plugin = loader.createInstance(*iter);
+    auto plugin = loader.createSharedInstance(*iter);
     plugin->configure(node, actors_, api_ptr_);
     actions_.push_back(plugin);
   }
+  return true;
 }
 catch (...)
 {
   SCENARIO_ERROR_RETHROW(CATEGORY(), "Failed to load action plugin.");
+  return false;
 }
 
 void ActionManager::run(
