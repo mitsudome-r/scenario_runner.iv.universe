@@ -18,7 +18,7 @@
 
 #include <boost/assign/list_of.hpp>
 
-ScenarioAPIAutoware::ScenarioAPIAutoware(rclcpp::Node::SharedPtr node)
+ScenarioAPIAutoware::ScenarioAPIAutoware(rclcpp::Node* node)
 : node_(node),
   tf_buffer_(node_->get_clock()),
   tf_listener_(tf_buffer_),

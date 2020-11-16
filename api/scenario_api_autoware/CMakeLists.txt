@@ -15,7 +15,7 @@ ament_auto_find_build_dependencies()
 ### Includes
 include_directories(include)
 
-ament_auto_add_library(scenario_api_autoware
+ament_auto_add_library(scenario_api_autoware SHARED
   src/scenario_api_autoware.cpp
 )
 

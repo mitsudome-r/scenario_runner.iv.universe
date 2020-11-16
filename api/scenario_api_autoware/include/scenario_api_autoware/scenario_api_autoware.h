@@ -77,8 +77,8 @@ class ScenarioAPIAutoware
 public:
   /**
    * @brief constructor
-   */
-  ScenarioAPIAutoware(rclcpp::Node::SharedPtr node);
+   */ 
+  ScenarioAPIAutoware(rclcpp::Node* node);
 
   /**
    * @brief destructor
@@ -157,7 +157,7 @@ public:
     double judge_dist_thresh = 30.0);
 
 private:
-  rclcpp::Node::SharedPtr node_;
+  rclcpp::Node* node_;
   /* Subscribers */
   rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr
     sub_pcl_;  //!< @brief topic subscriber for pcl
