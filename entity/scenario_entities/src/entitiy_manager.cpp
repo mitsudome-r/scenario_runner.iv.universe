@@ -87,17 +87,20 @@ try
   if (iter == classes.end())
   {
     SCENARIO_ERROR_THROW(CATEGORY(), "There is no plugin of type '" << type << "'.");
+    return false;
   }
   else
   {
-    auto plugin = loader.createInstance(*iter);
+    auto plugin = loader.createSharedInstance(*iter);
     plugin->configure(node, api_ptr);
     entities_.push_back(plugin);
   }
+  return true;
 }
 catch (...)
 {
   SCENARIO_ERROR_RETHROW(CATEGORY(), "Failed to load entity plugin.");
+  return false;
 }
 
 }  // namespace scenario_entities

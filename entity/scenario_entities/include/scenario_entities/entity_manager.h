@@ -1,7 +1,7 @@
 #ifndef SCENARIO_ENTITIES_ENTITY_MANAGER_H_INCLUDED
 #define SCENARIO_ENTITIES_ENTITY_MANAGER_H_INCLUDED
 
-#include <pluginlib/class_loader.h>
+#include <pluginlib/class_loader.hpp>
 
 #include <scenario_api/scenario_api_core.h>
 #include <scenario_entities/entity_base.h>
@@ -28,7 +28,7 @@ public:
 private:
   bool loadPlugin(YAML::Node node, std::shared_ptr<ScenarioAPI> api_ptr);
 
-  std::vector<boost::shared_ptr<scenario_entities::EntityBase>> entities_;
+  std::vector<std::shared_ptr<scenario_entities::EntityBase>> entities_;
 
   const std::shared_ptr<ScenarioAPI> api_ptr_;
 };
