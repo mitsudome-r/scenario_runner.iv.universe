@@ -171,7 +171,7 @@ boost::property_tree::ptree toJson(const scenario_logger_msgs::msg::MetaData& da
   return pt;
 }
 
-boost::property_tree::ptree toJson(const scenario_logger_msgs::msg::LoggedData& data, const rclcpp::Logger & rclcpp_logger)
+boost::property_tree::ptree toJson(const scenario_logger_msgs::msg::LoggedData& data)
 {
   using namespace boost::property_tree;
   ptree pt,log_tree;
@@ -188,7 +188,7 @@ boost::property_tree::ptree toJson(const scenario_logger_msgs::msg::LoggedData& 
     }
     else
     {
-      RCLCPP_ERROR_STREAM(rclcpp_logger, "failed to convert to json");
+      RCLCPP_ERROR_STREAM(rclcpp::get_logger("toJson"), "failed to convert to json");
     }
   }
   pt.add_child("log",log_tree);
