@@ -2,12 +2,10 @@
 #define INCLUDED_SCENARIO_EXPRESSION_EXPRESSION_H
 
 #include <algorithm>
-#include <boost/smart_ptr/shared_ptr.hpp>
 #include <functional>
 #include <ios>
 #include <iostream>
-#include <pluginlib/class_loader.h>
-#include <ros/ros.h>
+#include <pluginlib/class_loader.hpp>
 #include <scenario_api/scenario_api_core.h>
 #include <scenario_conditions/condition_base.h>
 #include <scenario_entities/entity_manager.h>
@@ -303,7 +301,7 @@ class Procedure
   friend Expression;
 
 protected:
-  boost::shared_ptr<PluginBase> plugin;
+  std::shared_ptr<PluginBase> plugin;
 
   Procedure()
     : Expression { std::integral_constant<decltype(0), 0>() }
@@ -329,7 +327,7 @@ protected:
     {
       if (loader().getName(declaration) == name)
       {
-        return loader().createInstance(declaration);
+        return loader().createSharedInstance(declaration);
       }
     }
 
