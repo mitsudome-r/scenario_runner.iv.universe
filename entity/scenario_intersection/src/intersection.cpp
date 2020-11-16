@@ -5,11 +5,11 @@ namespace scenario_intersection
 
 Intersection::Intersection(
   const YAML::Node& script,
-  rclcpp::Logger & logger
-  // const std::shared_ptr<ScenarioAPI>& simulator
+  const rclcpp::Logger & logger,
+  const std::shared_ptr<ScenarioAPI>& simulator
 )
   : script_ {script}
-  // , simulator_ {simulator}
+  , simulator_ {simulator}
 {
   if (const auto ids {script_["TrafficLightId"]})
   {
@@ -47,8 +47,7 @@ Intersection::Intersection(
 bool Intersection::change_to(const std::string& the_state)
 {
   // NOTE: Any unspecified state names are treated as "Blank" state
-  // return change_to_[current_state_ = the_state](*simulator_);
-  return false;
+  return change_to_[current_state_ = the_state](*simulator_);
 }
 
 const std::vector<std::size_t>& Intersection::ids() const

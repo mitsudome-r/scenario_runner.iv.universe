@@ -5,20 +5,20 @@ namespace scenario_intersection
 
 IntersectionManager::IntersectionManager(
   const YAML::Node& node,
-  // const std::shared_ptr<ScenarioAPI>& simulator)
-  rclcpp::Logger & logger)
+  const std::shared_ptr<ScenarioAPI>& simulator,
+  const rclcpp::Logger & logger)
   : node_ {node}
-  // , simulator_ {simulator}
+  , simulator_{simulator}
   , logger_(logger)
 {
   for (const auto& intersection : node_)
   {
     if (const auto name {intersection["Name"]})
     {
-      // intersections_.emplace(
-      //   std::piecewise_construct,
-      //   std::forward_as_tuple(name.as<std::string>()),
-      //   std::forward_as_tuple(intersection, simulator_));
+      intersections_.emplace(
+        std::piecewise_construct,
+        std::forward_as_tuple(name.as<std::string>()),
+        std::forward_as_tuple(intersection, logger_, simulator_));
     }
     else
     {
